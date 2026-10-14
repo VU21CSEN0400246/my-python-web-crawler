@@ -1,32 +1,57 @@
-import os
+import csv
+from urllib.parse import urljoin, urlparse
+
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
 
-url = ['https://example.com']
+START_URL = "https://example.com"
+OUTPUT_FILE = "results.csv"
+TIMEOUT = 10
 
 
-def vizitate(site):
+def crawl_page(url):
     try:
-        response = requests.get(site, timeout=10)
+        response = requests.get(
+            url,
+            timeout=TIMEOUT,
+            headers={"User-Agent": "SimplePythonCrawler/1.0"}
+        )
         response.raise_for_status()
 
-        with open("visited.txt", "w", encoding="utf-8") as file:
-            file.write(site)
-
-        parsed1 = BeautifulSoup(response.text, "html.parser")
-        print(response.headers)
-
-        for link in parsed1.find_all('a', href=True):
-            full_url = urljoin(site, link['href'])
-
-            if full_url.startswith(('http://', 'https://')) and not full_url.lower().endswith('.pdf'):
-                if full_url not in url:
-                    url.append(full_url)
-
     except requests.RequestException as error:
-        print("Error visiting website:", error)
+        print(f"Could not access {url}: {error}")
+        return []
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    page_title = soup.title.get_text(strip=True) if soup.title else "No title"
+
+    links = []
+
+    for tag in soup.find_all("a", href=True):
+        link = urljoin(url, tag["href"])
+        parsed_link = urlparse(link)
+
+        # Keep only HTTP and HTTPS links.
+        if parsed_link.scheme in ("http", "https"):
+            links.append(link)
+
+    # Remove duplicate links while preserving their order.
+    links = list(dict.fromkeys(links))
+
+    return [(url, page_title, link) for link in links]
 
 
-vizitate(url[0])
-print(url)
+def main():
+    results = crawl_page(START_URL)
+
+    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["page_url", "page_title", "extracted_link"])
+        writer.writerows(results)
+
+    print(f"Finished! Found {len(results)} links.")
+    print(f"Results saved to {OUTPUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()
