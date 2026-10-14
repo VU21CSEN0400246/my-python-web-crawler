@@ -2,7 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-url = ['']
+url = ['https://example.com']
 
 
 def vizitate(site):
