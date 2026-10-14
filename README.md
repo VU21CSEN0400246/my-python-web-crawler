@@ -1,28 +1,39 @@
-# Web Crawler
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)
----                                           
+# Python Web Crawler
+
+---
 
 ### Requirements: Python 3+
 
-#### Usage
+### Usage
+
+Set up the URL of the website you wish to crawl and then execute the script.
+
+### Installation
 
 ```sh
-Set up the url of the website you wish to crawl and then execute the script.
+pip install requests beautifulsoup4
 ```
 
-### Initialization 
+### Initialization
 
 ```sh
-$ python main.py
+python main.py
 ```
 
 ### Packages
-| [`requests`](https://github.com/psf/requests) | Requests allows you to send HTTP/1.1 requests extremely easily. |<br>
-| [`BeautifulSoup`](https://www.crummy.com/software/BeautifulSoup/) | Beautiful Soup creates a parse tree for parsed pages that can be used to extract data from HTML.|
 
-### Please note, this repo is for educational purposes only. No contributors, major or minor, are to fault for any actions done by this program.
+| Package | Description |
+|---|---|
+| [requests](https://github.com/psf/requests) | Requests allows you to send HTTP requests easily. |
+| [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) | Beautiful Soup creates a parse tree from HTML pages, allowing data to be extracted. |
 
----
-### 🔓 License 
-MIT © [Michael Radu](https://michaelradu.cf) <br>
-Don't really understand licenses or tl;dr? Check out the [MIT license summary](https://tldrlegal.com/license/mit-license).
+### Features
+
+- Retrieves webpage content.
+- Parses HTML using BeautifulSoup.
+- Extracts links from the starting webpage.
+- Resolves relative URLs.
+
+### Attribution
+
+This project is based on an open-source web crawler by Michael Radu and has been modified. Please retain the original licence and required attribution.
